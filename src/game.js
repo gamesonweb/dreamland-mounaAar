@@ -1,3 +1,4 @@
+import "@babylonjs/loaders";
 import {
   Engine,
   Scene,
@@ -6,125 +7,158 @@ import {
   DirectionalLight,
   ShadowGenerator,
   Vector3,
-  SceneLoader
+  SceneLoader,
+  PointerEventTypes,
+  AbstractMesh
 } from "@babylonjs/core";
-import { registerBoardClicks } from "./caseSelector.js";
-import { loadPieces }        from "./pieces.js";
+import { loadPieces } from "./pieces.js";
+import Player from "./player.js";
+import { highlightPiece, highlightSquares } from "./highlight.js";
 
 export default class Game {
-  
   constructor(canvasOrId, playerColor = "white") {
+    this.playerColor = playerColor;
     const canvas = typeof canvasOrId === "string"
       ? document.getElementById(canvasOrId)
       : canvasOrId;
     if (!(canvas instanceof HTMLCanvasElement)) {
       throw new Error("Game: attendu un <canvas> ou son id");
     }
-
     this.engine = new Engine(canvas, true);
-    this.scene  = new Scene(this.engine);
+    this.scene = new Scene(this.engine);
+    this.isProcessingClick = false;
 
-    const target    = Vector3.Zero();
-    const baseAlpha = (playerColor === "white" ? Math.PI/2 : 3*Math.PI/2);
-    const beta      = Math.PI / 3.3;
-    const radius    = 15;
-
-    this.camera = new ArcRotateCamera("cam", baseAlpha, beta, radius, target, this.scene);
+    // Caméra
+    const target = Vector3.Zero();
+    this.camera = new ArcRotateCamera(
+      "cam", Math.PI / 2, Math.PI / 3.3, 15, target, this.scene
+    );
     this.camera.attachControl(canvas, true);
-
     this.camera.lowerRadiusLimit = 10;
     this.camera.upperRadiusLimit = 55;
-
-    const halfView = Math.PI / 2;
-    this.camera.lowerAlphaLimit = baseAlpha - halfView/2;
-    this.camera.upperAlphaLimit = baseAlpha + halfView/2;
-
     this.camera.lowerBetaLimit = 0.5;
     this.camera.upperBetaLimit = Math.PI / 2;
-
+    const half = Math.PI / 2;
+    this.camera.lowerAlphaLimit = Math.PI / 2 - half / 2;
+    this.camera.upperAlphaLimit = Math.PI / 2 + half / 2;
     this.camera.panningSensibility = 0;
 
-    this._camState = {
-      alpha:             this.camera.alpha,
-      beta:              this.camera.beta,
-      radius:            this.camera.radius,
-      lowerAlphaLimit:   this.camera.lowerAlphaLimit,
-      upperAlphaLimit:   this.camera.upperAlphaLimit,
-      lowerBetaLimit:    this.camera.lowerBetaLimit,
-      upperBetaLimit:    this.camera.upperBetaLimit,
-      lowerRadiusLimit:  this.camera.lowerRadiusLimit,
-      upperRadiusLimit:  this.camera.upperRadiusLimit,
-      panningSensibility:this.camera.panningSensibility
-    };
-    this._topDown = false;
-
-    const hemi = new HemisphericLight("hemi", Vector3.Up(), this.scene);
-    hemi.intensity = 0.4;
-    const dir = new DirectionalLight("dir", new Vector3(-1, -2, -1), this.scene);
-    dir.intensity = 3;
-
-    const shadowGen = new ShadowGenerator(2048, dir);
-    shadowGen.useBlurExponentialShadowMap = true;
-    shadowGen.blurKernel = 32;
-
-    SceneLoader.ImportMesh(
-      "", "assets/models/", "echec.glb", this.scene,
-      (meshes) => {
-        const casePositions = {};
-        meshes.forEach(m => {
-          m.isPickable = true;
-          shadowGen.addShadowCaster(m, true);
-          if (/^[A-H][1-8]$/.test(m.name)) {
-            casePositions[m.name] = m.getBoundingInfo()
-                                      .boundingBox
-                                      .centerWorld
-                                      .clone();
-          }
-        });
-
-        registerBoardClicks(this.scene, casePositions);
-        loadPieces(this.scene, casePositions, shadowGen);
-      }
+    // Lumières & ombres
+    new HemisphericLight("hemi", Vector3.Up(), this.scene).intensity = 0.5;
+    const dir = new DirectionalLight(
+      "dir", new Vector3(-1, -2, -1).normalize(), this.scene
     );
+    dir.intensity = 1.2;
+    this.shadowGen = new ShadowGenerator(1024, dir);
+    this.shadowGen.usePoissonSampling = true;
+
+    // Map case
+    this.caseMeshes = {};
+    this.casePositions = {};
+
+    // Chargement  plateau
+    SceneLoader.ImportMesh("", "assets/models/", "echec.glb", this.scene, meshes => {
+      meshes.forEach(node => {
+        if (!(node instanceof AbstractMesh)) return;
+        const n = node.name;
+        if (/^[a-h][1-8]$/.test(n)) {
+          node.isPickable = true;
+          this.caseMeshes[n] = node;
+          const center = node.getBoundingInfo().boundingBox.centerWorld.clone();
+meshes.forEach(node => {
+  if (!(node instanceof AbstractMesh)) return;
+  const n = node.name;
+  if (/^[a-h][1-8]$/.test(n)) {
+    node.isPickable = true;
+    this.caseMeshes[n] = node;
+    const center = node.getBoundingInfo().boundingBox.centerWorld.clone();
+    this.casePositions[n] = new Vector3(-center.x, center.y, center.z); // Inverse l'axe x
+    console.log(`Case ${n} positionnée à x:${center.x}, y:${center.y}, z:${center.z}`);
+  }
+});   
+    console.log(`Case ${n} positionnée à x:${center.x}, y:${center.y}, z:${center.z}`);
+        }
+      });
+
+      // Vérif ces cases
+      const a2Pos = this.casePositions['a2'];
+      const h2Pos = this.casePositions['h2'];
+      console.log(`Position de a2 : x:${a2Pos.x}, z:${a2Pos.z}`);
+      console.log(`Position de h2 : x:${h2Pos.x}, z:${h2Pos.z}`);
+
+      // Place les pièces
+      loadPieces(this.scene, this.casePositions, this.shadowGen);
+
+      // Player
+      this.player = new Player(
+        this.scene,
+        this.caseMeshes,
+        this.casePositions,
+        this.playerColor
+      );
+
+      // Gestion de clic
+      this.scene.onPointerObservable.add(evt => {
+        if (evt.type !== PointerEventTypes.POINTERPICK || !evt.pickInfo.hit) return;
+        if (this.isProcessingClick) return;
+        this.isProcessingClick = true;
+
+        const mesh = evt.pickInfo.pickedMesh;
+        if (!mesh) {
+          this.isProcessingClick = false;
+          return;
+        }
+        console.log("Clic sur :", mesh.name);
+        const moved = this.player.handlePick(mesh);
+        if (moved && this.player.turnHasChanged) {
+          this.player.turnHasChanged = false;
+          this.player.playAI();
+        }
+        this.isProcessingClick = false;
+      });
+    });
 
     this.engine.runRenderLoop(() => this.scene.render());
     window.addEventListener("resize", () => this.engine.resize());
   }
+//Caméra vu du dessus
+  toggleTopDownView() {
+    if (!this.camera) return;
+    this._topDown = !this._topDown;
 
-
-toggleTopDownView() {
-  if (!this.camera) return;
-  this._topDown = !this._topDown;
-
-  if (this._topDown) {
-  
-    const topRadius = 80;
-    const topBeta   = 0.05;  
-
-    this.camera.lowerBetaLimit    =
-    this.camera.upperBetaLimit    = topBeta;
-    this.camera.lowerRadiusLimit  =
-    this.camera.upperRadiusLimit  = topRadius;
-
-    this.camera.beta   = topBeta;
-    this.camera.radius = topRadius;
-
-    this.camera.lowerAlphaLimit   =
-    this.camera.upperAlphaLimit   = this.camera.alpha;
-    this.camera.panningSensibility = 0;
-  } else {
-    const s = this._camState;
-    this.camera.alpha              = s.alpha;
-    this.camera.beta               = s.beta;
-    this.camera.radius             = s.radius;
-    this.camera.lowerAlphaLimit    = s.lowerAlphaLimit;
-    this.camera.upperAlphaLimit    = s.upperAlphaLimit;
-    this.camera.lowerBetaLimit     = s.lowerBetaLimit;
-    this.camera.upperBetaLimit     = s.upperBetaLimit;
-    this.camera.lowerRadiusLimit   = s.lowerRadiusLimit;
-    this.camera.upperRadiusLimit   = s.upperRadiusLimit;
-    this.camera.panningSensibility  = s.panningSensibility;
+    if (this._topDown) {
+      const topRadius = 80;
+      const topBeta = 0.05;
+      this.camera.lowerBetaLimit = this.camera.upperBetaLimit = topBeta;
+      this.camera.lowerRadiusLimit = this.camera.upperRadiusLimit = topRadius;
+      this.camera.beta = topBeta;
+      this.camera.radius = topRadius;
+      this.camera.lowerAlphaLimit = this.camera.upperAlphaLimit = this.camera.alpha;
+      this.camera.panningSensibility = 0;
+    } else {
+      const s = this._camState || {};
+      this.camera.alpha = s.alpha || Math.PI / 2;
+      this.camera.beta = s.beta || Math.PI / 3.3;
+      this.camera.radius = s.radius || 15;
+      this.camera.lowerAlphaLimit = s.lowerAlphaLimit || Math.PI / 2 - Math.PI / 4;
+      this.camera.upperAlphaLimit = s.upperAlphaLimit || Math.PI / 2 + Math.PI / 4;
+      this.camera.lowerBetaLimit = s.lowerBetaLimit || 0.5;
+      this.camera.upperBetaLimit = s.upperBetaLimit || Math.PI / 2;
+      this.camera.lowerRadiusLimit = s.lowerRadiusLimit || 10;
+      this.camera.upperRadiusLimit = s.upperRadiusLimit || 55;
+      this.camera.panningSensibility = s.panningSensibility || 0;
+    }
+    this._camState = {
+      alpha: this.camera.alpha,
+      beta: this.camera.beta,
+      radius: this.camera.radius,
+      lowerAlphaLimit: this.camera.lowerAlphaLimit,
+      upperAlphaLimit: this.camera.upperAlphaLimit,
+      lowerBetaLimit: this.camera.lowerBetaLimit,
+      upperBetaLimit: this.camera.upperBetaLimit,
+      lowerRadiusLimit: this.camera.lowerRadiusLimit,
+      upperRadiusLimit: this.camera.upperRadiusLimit,
+      panningSensibility: this.camera.panningSensibility
+    };
   }
-}
-
 }

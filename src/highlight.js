@@ -1,18 +1,19 @@
-import { HighlightLayer } from "@babylonjs/core/Layers/highlightLayer";
-import { Color3 } from "@babylonjs/core/Maths/math.color";
+import { HighlightLayer, Color3 } from "@babylonjs/core";
 
-let highlightLayer = null;
+let hlPiece = null, hlSquare = null;
 
 export function highlightPiece(scene, mesh) {
-  if (!highlightLayer) {
-    highlightLayer = new HighlightLayer("highlight", scene);
+  if (!hlPiece) hlPiece = new HighlightLayer("hlPiece", scene);
+  hlPiece.removeAllMeshes();
+  if (mesh) {
+    hlPiece.addMesh(mesh, mesh.name.includes("blanc") ? Color3.White() : Color3.Magenta());
   }
+}
 
-  highlightLayer.removeAllMeshes();
-
-  const color = mesh.metadata?.couleur === "blanc"
-    ? Color3.White()
-    : Color3.Red();
-
-  highlightLayer.addMesh(mesh, color);
+export function highlightSquares(scene, meshes) {
+  if (!hlSquare) hlSquare = new HighlightLayer("hlSquare", scene);
+  hlSquare.removeAllMeshes();
+  if (meshes && meshes.length > 0) {
+    meshes.forEach(m => hlSquare.addMesh(m, Color3.Yellow()));
+  }
 }

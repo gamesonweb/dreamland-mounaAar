@@ -1,84 +1,58 @@
-import {
-  SceneLoader,
-  ActionManager,
-  ExecuteCodeAction,
-  Vector3
-} from "@babylonjs/core";
-import { MovmentManager } from "./movment.js";
+import { SceneLoader, Vector3 } from "@babylonjs/core";
 
 const initialPlacementMap = {
-  "roi-blanc":      ["E1"],
-  "reine-blanc":    ["D1"],
-  "tour-blanc":     ["A1","H1"],
-  "fou-blanc":      ["C1","F1"],
-  "cavalier-blanc": ["B1","G1"],
-  "pion-blanc":     ["A2","B2","C2","D2","E2","F2","G2","H2"],
-  "roi-noir":       ["E8"],
-  "reine-noir":     ["D8"],
-  "tour-noir":      ["A8","H8"],
-  "fou-noir":       ["C8","F8"],
-  "cavalier-noir":  ["B8","G8"],
-  "pion-noir":      ["A7","B7","C7","D7","E7","F7","G7","H7"]
+  "roi-blanc": ["e1"],
+  "reine-blanc": ["d1"],
+  "tour-blanc": ["a1", "h1"],
+  "fou-blanc": ["c1", "f1"],
+  "cavalier-blanc": ["b1", "g1"],
+  "pion-blanc": ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"],
+  "roi-noir": ["e8"],
+  "reine-noir": ["d8"],
+  "tour-noir": ["a8", "h8"],
+  "fou-noir": ["c8", "f8"],
+  "cavalier-noir": ["b8", "g8"],
+  "pion-noir": ["a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"]
 };
-
 const elevatedPieces = new Set([
-  "roi-blanc","roi-noir",
-  "reine-blanc","reine-noir",
-  "fou-blanc","fou-noir"
+  "roi-blanc", "reine-blanc", "fou-blanc",
+  "roi-noir", "reine-noir", "fou-noir"
 ]);
 
-
 export function loadPieces(scene, casePositions, shadowGen) {
-  SceneLoader.ImportMesh(
-    "",
-    "assets/models/",
-    "pieces.glb",
-    scene,
-    (meshes) => {
-      meshes.forEach(m => {
-        m.isVisible  = false;
-        m.isPickable = false;
-      });
+  SceneLoader.ImportMesh("", "assets/models/", "pieces.glb", scene, meshes => {
+    meshes.forEach(m => {
+      m.isVisible = false;
+      m.isPickable = false;
+    });
 
-      Object.entries(initialPlacementMap).forEach(([meshName, cases]) => {
-        const proto = meshes.find(m => m.name === meshName);
-        if (!proto) {
-          console.warn(`Prototype manquant : ${meshName}`);
+    Object.entries(initialPlacementMap).forEach(([meshName, squares]) => {
+      const proto = meshes.find(m => m.name === meshName);
+      if (!proto) {
+        console.warn(`Prototype manquant : ${meshName}`);
+        return;
+      }
+      const bb = proto.getBoundingInfo().boundingBox;
+      const halfHeight = elevatedPieces.has(meshName) ? bb.extendSizeWorld.y : 0;
+
+      squares.forEach(square => {
+        const key = square;
+        const center = casePositions[key];
+        if (!center) {
+          console.warn(`Pas de position pour ${square}`);
           return;
         }
-
-        const bb = proto.getBoundingInfo().boundingBox;
-        const halfHeight = elevatedPieces.has(meshName)
-          ? bb.extendSizeWorld.y
-          : 0;
-
-        cases.forEach(caseName => {
-          const center = casePositions[caseName];
-          if (!center) {
-            console.warn(`Pas de position pour ${caseName}`);
-            return;
-          }
-
-          const clone = proto.clone(`${meshName}-${caseName}`);
-          clone.isVisible  = true;
-          clone.isPickable = true;
-          clone.position = new Vector3(
-            center.x,
-            center.y + halfHeight,
-            center.z
-          );
-
-          clone.actionManager = new ActionManager(scene);
-          clone.actionManager.registerAction(
-            new ExecuteCodeAction(
-              ActionManager.OnPickTrigger,
-              () => MovmentManager.selectPiece(clone)
-            )
-          );
-
-          shadowGen.addShadowCaster(clone, true);
-        });
+        const clone = proto.clone(`${meshName}-${square}`);
+        clone.isVisible = true;
+        clone.isPickable = true;
+        clone.position = new Vector3(
+          center.x +2,
+          center.y + halfHeight,
+          center.z +0.5
+        );
+        console.log(`Pièce ${clone.name} placée à ${square} (x:${center.x}, y:${center.y}, z:${center.z})`);
+        shadowGen.addShadowCaster(clone, true);
       });
-    }
-  );
+    });
+  });
 }
