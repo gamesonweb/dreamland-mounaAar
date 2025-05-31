@@ -33,7 +33,9 @@ Lien du jeu :
 ### Node.js / npm / Webpack 
 
 ## Comment jouer ? 
-Lien du jeu : 
+### Git Clone
+### npm install
+### npm start 
 - Choisi la couleur de ton choix (noir ou blanc)
 - Sélectionne la pièce de ta couleur de ton choix.
 - Les cases où la pièce peut se déplacer se surlignent en jaune.
