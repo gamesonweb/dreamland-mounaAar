@@ -6,7 +6,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const appDirectory = fs.realpathSync(process.cwd());
 
 module.exports = {
-    entry: path.resolve(appDirectory, "src/index.js"),
+    entry: path.resolve(appDirectory, "./src/index.js"),
     output: {
         filename: "js/babylonBundle.js",
         path: path.resolve("./dist/"),
@@ -64,7 +64,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             inject: true,
             favicon: "public/favicon.ico",
-            template: path.resolve(appDirectory, 'index.html'),
+            template: path.resolve(appDirectory, './index.html'),
         }),
     ],
 };
