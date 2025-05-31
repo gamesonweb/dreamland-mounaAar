@@ -45,8 +45,8 @@ Lien du jeu :
 - Recharge la page pour une nouvelle partie.
 
 ## GamePlay : 
-https://www.canva.com/design/DAGo-RSzbFM/LgruGfZzE2ijaG3HpDkayg/edit?utm_content=DAGo-RSzbFM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
-
+[https://www.canva.com/design/DAGo-RSzbFM/LgruGfZzE2ijaG3HpDkayg/edit?utm_content=DAGo-RSzbFM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+](https://www.canva.com/design/DAGo-RSzbFM/eKJmmytFR-HzuqXdVFoDfQ/watch?utm_content=DAGo-RSzbFM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=had4d5b7607)
 ## Améliorations pas encore implémentées (manque de temps...)
 
 Mise en place du temps de jeu (chronomètre) 
