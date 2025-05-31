@@ -57,7 +57,7 @@ export default class Game {
     this.casePositions = {};
 
     // Chargement  plateau
-    SceneLoader.ImportMesh("", "assets/models/", "echec.glb", this.scene, meshes => {
+    SceneLoader.ImportMesh("", "./assets/models/", "./echec.glb", this.scene, meshes => {
       meshes.forEach(node => {
         if (!(node instanceof AbstractMesh)) return;
         const n = node.name;
