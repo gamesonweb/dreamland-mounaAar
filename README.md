@@ -44,6 +44,9 @@ Lien du jeu :
 - Continue jusqu’à ce qu’il y ait échec et mat.
 - Recharge la page pour une nouvelle partie.
 
+## GamePlay : 
+https://www.canva.com/design/DAGo-RSzbFM/LgruGfZzE2ijaG3HpDkayg/edit?utm_content=DAGo-RSzbFM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
 ## Améliorations pas encore implémentées (manque de temps...)
 
 Mise en place du temps de jeu (chronomètre) 
