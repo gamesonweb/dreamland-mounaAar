@@ -10,11 +10,10 @@ module.exports = merge(common, {
     mode: 'development',
     devtool: 'inline-source-map',
     devServer: {
-  static: path.resolve(appDirectory, "public"),
-  host: '0.0.0.0',                    
-  port: process.env.PORT || 8080,     
-  allowedHosts: 'all',               
-  compress: true,
-  open: false                         
-}
+        static: path.resolve(appDirectory, "public"),
+        compress: true,
+        hot: true,
+        
+        open: true,        
+    },
 });

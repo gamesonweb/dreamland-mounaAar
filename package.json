@@ -4,22 +4,17 @@
   "description": "Chess game",
   "main": "index.js",
   "homepage": "https://mounaAar.github.io/gameLand",
-
   "scripts": {
-    "dev":   "webpack serve --config webpack.dev.js",
+    "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-
-    "start": "NODE_OPTIONS=--max_old_space_size=512 serve -s dist -l ${PORT:-8080}",
-
-    "lint":  "eslint . --ext .js",
+"start": "npx webpack serve --config webpack.dev.js",
+    "lint": "eslint . --ext .js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-
   "engines": {
     "node": "20.x"
   },
-
   "devDependencies": {
     "@babylonjs/core": "^6.41.0",
     "@babylonjs/gui": "^6.41.0",
@@ -27,7 +22,6 @@
     "@babylonjs/inspector": "^6.41.0",
     "@babylonjs/loaders": "^6.49.0",
     "@babylonjs/materials": "^6.41.0",
-
     "clean-webpack-plugin": "^4.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
@@ -38,15 +32,12 @@
     "recast-detour": "^1.6.3",
     "source-map-loader": "^5.0.0",
     "url-loader": "^4.1.1",
-
     "webpack": "^5.90.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "webpack-merge": "^5.10.0"
   },
-
   "dependencies": {
-    "chess.js": "^1.2.0",
-    "serve": "^14.2.4"
+    "chess.js": "^1.2.0"
   }
 }
