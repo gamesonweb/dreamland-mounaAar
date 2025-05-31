@@ -20,7 +20,7 @@ const elevatedPieces = new Set([
 ]);
 
 export function loadPieces(scene, casePositions, shadowGen) {
-  SceneLoader.ImportMesh("", "./assets/models/", "./pieces.glb", scene, meshes => {
+  SceneLoader.ImportMesh("", "./public/assets/models/", "./pieces.glb", scene, meshes => {
     meshes.forEach(m => {
       m.isVisible = false;
       m.isPickable = false;
