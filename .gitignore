@@ -1,0 +1,25 @@
+# Node.js dependencies
+node_modules/
+
+dist/
+build/
+.eslintcache
+
+public/assets/models/
+public/assets/musics/
+
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+
+/js/babylonBundle.js
