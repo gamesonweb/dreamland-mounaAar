@@ -9,6 +9,11 @@
     href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
     rel="stylesheet"
   />
+   <script src="./js/babylonBundle.js"></script>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+
 </head>
 <body>
   <div
@@ -35,7 +40,6 @@
     </button>
   </div>
 
-  <!-- Overlay choix de couleur (popup transparent), caché par défaut -->
   <div id="colorOverlay" class="overlay" style="display: none;">
     <button id="btnWhite" class="start-btn color-btn">Blanc</button>
     <button id="btnBlack" class="start-btn color-btn">Noir</button>
@@ -57,17 +61,17 @@
     <label><input type="checkbox" id="toggleSound" checked> Effets</label>
   </div>
 </div>
-<script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
-    <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
-  <script type="module" src="./src/index.js"></script>
-  <script src="./src/caseSelector.js" type="module"></script>
-  <script src="./src/game.js" type="module"></script>
-  <script src="./src/highlight.js" type="module"></script>
-  <script src="./src/ia.js" type="module"></script>
-  <script src="./src/pieces.js" type="module"></script>
-  <script src="./src/player.js" type="module"></script>
 
+  <script src="./src/index.js"></script>
+  <script src="./src/game.js"></script>
+  <script src="./src/highlight.js"></script>
+  <script src="./src/pieces.js"></script>
+  <script src="./src/player.js"></script>
+  <script src="./src/ia.js"></script>
+  <script src="./src/soundmanager.js"></script>
+  <script src="./src/caseSelector.js"></script>
+
+ 
 
 </body>
 </html>
