@@ -5,8 +5,7 @@ dist/
 build/
 .eslintcache
 
-public/assets/models/
-public/assets/musics/
+
 
 
 .DS_Store
