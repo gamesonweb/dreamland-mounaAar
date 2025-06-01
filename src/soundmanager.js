@@ -1,5 +1,4 @@
-import { AssetsManager, Sound } from "@babylonjs/core";
-import music1Url                from "../assets/musics/magic-chessboard-278016.mp3";
+const music1Url = "./assets/musics/magic-chessboard-278016.mp3";
 
 class SoundManager {
   Musics = Object.freeze({
@@ -18,12 +17,11 @@ class SoundManager {
 
   static get instance() {
     return (
-      globalThis[Symbol.for(`PF_${SoundManager.name}`)] ||
-      new SoundManager()
+        globalThis[Symbol.for(`PF_${SoundManager.name}`)] ||
+        new SoundManager()
     );
   }
 
- 
   async init(scene) {
     this.scene = scene;
     await this.loadAssets();
@@ -71,21 +69,21 @@ class SoundManager {
   async loadAssets() {
     if (!this.scene) throw new Error("SoundManager: scene not set");
     return new Promise((resolve, reject) => {
-      const assetsManager = new AssetsManager(this.scene);
+      const assetsManager = new BABYLON.AssetsManager(this.scene);
 
       const musicTask = assetsManager.addBinaryFileTask(
-        "music1",
-        music1Url
+          "music1",
+          music1Url
       );
 
       assetsManager.onFinish = () => {
         // créer l’objet Sound pour la musique
-        this.musics[this.Musics.GAME_MUSIC] = new Sound(
-          "gameMusic",
-          musicTask.data,
-          this.scene,
-          null,
-          { loop: true, autoplay: false, volume: 0.5 }
+        this.musics[this.Musics.GAME_MUSIC] = new BABYLON.Sound(
+            "gameMusic",
+            musicTask.data,
+            this.scene,
+            null,
+            { loop: true, autoplay: false, volume: 0.5 }
         );
         resolve(true);
       };
@@ -100,5 +98,4 @@ class SoundManager {
   }
 }
 
-const { instance } = SoundManager;
-export { instance as SoundManager };
+globalThis.SoundManager = SoundManager.instance;

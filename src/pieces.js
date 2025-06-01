@@ -1,5 +1,3 @@
-import { SceneLoader, Vector3 } from "@babylonjs/core";
-
 const initialPlacementMap = {
   "roi-blanc": ["e1"],
   "reine-blanc": ["d1"],
@@ -19,8 +17,8 @@ const elevatedPieces = new Set([
   "roi-noir", "reine-noir", "fou-noir"
 ]);
 
-export function loadPieces(scene, casePositions, shadowGen) {
-  SceneLoader.ImportMesh("", "./public/assets/models/", "./pieces.glb", scene, meshes => {
+function loadPieces(scene, casePositions, shadowGen) {
+  BABYLON.SceneLoader.ImportMesh("", "./public/assets/models/", "pieces.glb", scene, meshes => {
     meshes.forEach(m => {
       m.isVisible = false;
       m.isPickable = false;
@@ -45,7 +43,7 @@ export function loadPieces(scene, casePositions, shadowGen) {
         const clone = proto.clone(`${meshName}-${square}`);
         clone.isVisible = true;
         clone.isPickable = true;
-        clone.position = new Vector3(
+        clone.position = new BABYLON.Vector3(
           center.x +2,
           center.y + halfHeight,
           center.z +0.5

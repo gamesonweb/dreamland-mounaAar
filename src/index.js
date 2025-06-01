@@ -1,13 +1,12 @@
-import "@babylonjs/loaders";
-import Game from "./game.js";
-import { SoundManager } from "./soundmanager.js";
-
 let gameInstance = null;
+const soundManager = SoundManager.instance;
 
-document.getElementById("startAdventureBtn").addEventListener("click", () => {
-  document.getElementById("homeScreen").style.display = "none";
-  document.getElementById("colorOverlay").style.display = "flex";
-});
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("startAdventureBtn").addEventListener("click", () => {
+    document.getElementById("homeScreen").style.display = "none";
+    document.getElementById("colorOverlay").style.display = "flex";
+  });
+
 
 document.getElementById("btnWhite").addEventListener("click", () => startChess("white"));
 document.getElementById("btnBlack").addEventListener("click", () => startChess("black"));
@@ -19,7 +18,8 @@ async function startChess(playerColor) {
 
   gameInstance = new Game("renderCanvas", playerColor);
 
-  await SoundManager.init(gameInstance.scene);
+  await soundManager.init(gameInstance.scene);
+    soundManager.playMusic(soundManager.Musics.GAME_MUSIC);
 }
 
 
@@ -33,10 +33,10 @@ const toggleMusic      = document.getElementById("toggleMusic");
 const toggleSound      = document.getElementById("toggleSound");
 
 toggleMusic.addEventListener("change", e => {
-  SoundManager.setMusicEnabled(e.target.checked);
+  soundManager.setMusicEnabled(e.target.checked);
 });
 toggleSound.addEventListener("change", e => {
-  SoundManager.setSoundEnabled(e.target.checked);
+  soundManager.setSoundEnabled(e.target.checked);
 });
 
 settingsBtn.addEventListener("click", (e) => {
@@ -48,3 +48,4 @@ settingsBtn.addEventListener("click", (e) => {
       settingsDropdown.classList.remove("show");
     }
   });
+});
