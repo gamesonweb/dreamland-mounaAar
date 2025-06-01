@@ -5,12 +5,12 @@
   "homepage": "https://mounaAar.github.io/gameLand",
 
   "scripts": {
-    "dev": "webpack serve --config webpack.dev.js",       
-    "build": "webpack --config webpack.prod.js",           
-    "start": "npm run dev",                                
-    "start:prod": "npx serve -s dist -l $PORT",           
+    "dev": "webpack serve --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "start": "npm run dev",
+    "start:prod": "npx serve -s dist -l $PORT",
     "lint": "eslint . --ext .js",
-    "predeploy": "npm run build",                        
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
 

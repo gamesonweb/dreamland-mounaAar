@@ -1,4 +1,4 @@
-import { getBestMove } from "./iaEngine.js"; // ton moteur alpha-beta
+import { getBestMove } from "./iaEngine.js"; 
 
 export function playAI(scene, casePositions) {
   const mv = getBestMove();

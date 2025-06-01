@@ -5,10 +5,8 @@ module.exports = merge(common, {
   mode: 'production',
   devtool: 'source-map',
   optimization: {
-    concatenateModules: false,
-    splitChunks: {
-      // include all types of chunks
-      chunks: 'all',
-    },
-  },
+    splitChunks: { chunks: 'all' },  
+    runtimeChunk: 'single',          
+    concatenateModules: true         
+  }
 });
