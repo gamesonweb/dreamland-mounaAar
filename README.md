@@ -4,8 +4,8 @@ Bienvenue sur GameLand, mon projet d’échecs en 3D !
 Ici, chaque case et chaque pièce sont modélisées en 3D grâce à BabylonJS, avec la logique de jeu gérée par chess.js. 
 Le résultat : un plateau immersif dans ton navigateur, où tu peux cliquer sur une pièce, voir les déplacements possibles, et jouer contre une IA simple.
 
-Lien du jeu : https://gamesonweb.github.io/dreamland-mounaAar/
-
+- Lien du jeu : https://gamesonweb.github.io/dreamland-mounaAar/
+- Lien de la vidéo : https://www.canva.com/design/DAGo-RSzbFM/eKJmmytFR-HzuqXdVFoDfQ/watch?utm_content=DAGo-RSzbFM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=had4d5b7607
 ## Fonctionnalités principales
 
 - Plateau 3D modélisé dans Blender et exporté au format .glb
@@ -33,7 +33,6 @@ Lien du jeu : https://gamesonweb.github.io/dreamland-mounaAar/
 ### Node.js / npm / Webpack 
 
 ## Comment jouer ? 
-Lien du jeu : 
 - Choisi la couleur de ton choix (noir ou blanc)
 - Sélectionne la pièce de ta couleur de ton choix.
 - Les cases où la pièce peut se déplacer se surlignent en jaune.
