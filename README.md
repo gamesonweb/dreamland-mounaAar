@@ -33,7 +33,6 @@ Lien de la vidéo : https://www.canva.com/design/DAGo-RSzbFM/eKJmmytFR-HzuqXdVFo
 ### Node.js / npm / Webpack 
 
 ## Comment jouer ? 
-Lien du jeu : 
 - Choisi la couleur de ton choix (noir ou blanc)
 - Sélectionne la pièce de ta couleur de ton choix.
 - Les cases où la pièce peut se déplacer se surlignent en jaune.
